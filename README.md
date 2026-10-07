@@ -39,14 +39,11 @@ Detalhes em [docs/arquitetura.md](docs/arquitetura.md).
 
 ## Destaques técnicos
 
+- **Histórico reconstruído e validado.** Com `propertiesWithHistory`, o script calcula como cada negócio estava no último minuto de cada mês passado. Antes de confiar nisso, ele reconstrói a base de hoje pelo mesmo método e compara com o dado real, coluna a coluna: 98 a 100% de igualdade. [Como funciona](docs/historico-mensal.md).
+- **Cache que derrubou a abertura de 40 a 63 segundos para poucos segundos.** O pacote de dados é compactado em gzip num arquivo do Drive e só é remontado quando a planilha muda, quando o painel pede outras colunas ou quando a versão do cache muda no código.
 - **O cabeçalho da planilha é o contrato.** A sync preenche exatamente as colunas da linha 1, achando cada propriedade do HubSpot pelo rótulo. Coluna nova no painel = escrever o cabeçalho certo, sem tocar no código.
-- **Busca fatiada por mês** para contornar o limite de 10 mil resultados da Search API, associações em lote (500 por chamada na v4) e retry com espera crescente em 429/5xx.
-- **Escrita segura:** a aba só é limpa depois que todos os dados chegaram. Se a API falhar no meio, fica o dado do dia anterior, um registro no `_sync_log` e um e-mail de alerta.
-- **Histórico reconstruído.** Com `propertiesWithHistory`, o script calcula como cada negócio estava no último minuto de cada mês passado. Antes de confiar nisso, ele reconstrói a base de hoje pelo mesmo método e compara com o dado real, coluna a coluna: 98 a 100% de igualdade. [Como funciona](docs/historico-mensal.md).
-- **Cache em três sinais.** O pacote de dados é compactado em gzip num arquivo do Drive e só é remontado quando a planilha muda, quando o painel pede outras colunas ou quando a versão do cache muda no código. Antes do cache, cada abertura levava de 40 a 63 segundos.
-- **Regras que viraram código:** cinco regras de deduplicação de reuniões, leitura do histórico bruto de conversas de WhatsApp (quem iniciou, se o lead respondeu, tempo de resposta em mediana) e "programado" no passado tratado como falta.
 
-As escolhas e as alternativas descartadas estão em [docs/decisoes.md](docs/decisoes.md). Os problemas que apareceram em produção, e o que mudou por causa deles, estão em [docs/incidentes.md](docs/incidentes.md).
+Os outros detalhes (busca fatiada contra o limite da Search API, escrita segura com alerta, deduplicação de reuniões, leitura de WhatsApp) e as alternativas descartadas estão em [docs/decisoes.md](docs/decisoes.md). Os problemas que apareceram em produção, e o que mudou por causa deles, estão em [docs/incidentes.md](docs/incidentes.md).
 
 ## O painel
 
@@ -105,4 +102,4 @@ A weekly B2G pipeline report built entirely on Google Apps Script: a daily HubSp
 
 ---
 
-Daniel Terra · Revenue Operations, dados e automação
+[Daniel Terra](https://danielterra13-lang.github.io) · Revenue Operations, dados e automação · [veja os outros projetos](https://danielterra13-lang.github.io)

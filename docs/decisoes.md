@@ -20,6 +20,12 @@ Registro das escolhas que mais pesaram, com o que foi descartado e por quê. A r
 
 **Por quê:** a planilha substituiu exports manuais; mantendo os mesmos cabeçalhos do export nativo, o painel antigo continuou funcionando no primeiro dia. Coluna nova não exige deploy. O custo é depender do rótulo exato, mitigado pelo aviso "coluna sem propriedade" no log e pela função `listarPropriedades()`.
 
+## Extração: busca fatiada e escrita segura
+
+**Busca fatiada por mês.** A Search API do HubSpot devolve no máximo 10 mil resultados por consulta. A sync divide a busca por mês de criação, junta as fatias e busca as associações em lote (500 por chamada na v4), com retry e espera crescente em 429 e 5xx.
+
+**Escrita só depois de tudo chegar.** A aba só é limpa quando todos os dados já estão em memória. Se a API falhar no meio, fica o dado do dia anterior, um registro no `_sync_log` e um e-mail de alerta. Planilha pela metade é pior do que planilha de ontem.
+
 ## Dois projetos de Apps Script
 
 Ver [arquitetura.md](arquitetura.md#por-que-dois-projetos-de-apps-script). Resumo: o Web App expõe as funções globais do projeto ao navegador.
