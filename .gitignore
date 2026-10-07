@@ -1,0 +1,19 @@
+# credenciais e IDs do clasp (cada projeto de Apps Script tem o seu)
+.clasp.json
+**/.clasp.json
+.clasprc.json
+
+# segredos e configurações locais
+.env
+*.local.*
+secrets/
+
+# saídas locais do gerador
+demo/csv/
+
+# Python / Node / SO
+__pycache__/
+*.pyc
+node_modules/
+.DS_Store
+_site/

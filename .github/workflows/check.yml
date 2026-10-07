@@ -1,0 +1,33 @@
+# Checagens rápidas: sintaxe dos .gs e reprodutibilidade dos dados sintéticos.
+name: Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sintaxe do Apps Script (V8 = JavaScript)
+        run: for f in apps-script/*/*.gs; do cp "$f" /tmp/check.js && node --check /tmp/check.js && echo "ok $f"; done
+      - name: Sintaxe do script do painel
+        run: |
+          python3 - <<'PY'
+          import re
+          html = open('apps-script/dashboard/Index.html', encoding='utf-8').read()
+          js = re.findall(r'<script>(.*?)</script>', html, re.S)
+          open('/tmp/index.js', 'w', encoding='utf-8').write('\n'.join(js))
+          PY
+          node --check /tmp/index.js
+      - name: Dados sintéticos reproduzíveis
+        run: |
+          python3 data-generator/generate.py --out /tmp/demo.json
+          cmp /tmp/demo.json demo/demo.json && echo "demo.json bate com o gerador"
